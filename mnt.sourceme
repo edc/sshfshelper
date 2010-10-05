@@ -1,0 +1,64 @@
+# this is to be sourced from .bashrc or .bash_profile. Then you can use mnt to
+# quick mount sshfs volumes
+#
+# Examples:
+# $ mnt
+# this would mount the default volume skywalker: on /Volumes/skywalker
+#
+# $ mnt host
+# this would mount sshfs://host on /Volumes/host
+#
+# $ mnt host/root
+# this would mount sshfs://host/root on /Volumes/root
+#
+# $ mnt host.example.com/home/hippi
+# this would mount sshfs://host.example.com/home/hippi on /Volumes/hippi
+#
+# $ mnt host.example.com
+# this would mount sshfs://host.example.com on /Volumes/host
+#
+
+# configure a default mount server. invoke `mnt` will mount this server
+DEFAULT=skywalker:
+# prefix to be applied to the mount point. see MOUNT_POINT below
+MOUNT_POINT_PREFIX=
+# where to put the mounting folder? This is /Volumes on Mac OS X
+MOUNT_POINT_HOME=/Volumes
+
+function mnt {
+	if [ $# == 0 ] 
+	then
+		NODE=$DEFAULT
+	else
+		NODE=$1
+	fi
+	# is hostname fully qualified?
+	if [ ${NODE%%.*} == $NODE ]
+	then
+		VOL=${NODE%:}
+	else
+		VOL=${NODE%%.*}
+	fi
+	# is slash in $NODE? (are we mounting a non-default folder?)
+	if [ ${NODE##*/} == $NODE ]
+	then
+		# no slash. set the folder
+		# making sure NODE ends with colon
+		if [ ${NODE%:} == $NODE ]
+		then
+			NODE=$NODE:
+		fi
+	else
+		# use the folder name as volumn name
+		VOL=${NODE##*/}
+	fi
+
+	MOUNT_POINT=$MOUNT_POINT_HOME/$MOUNT_POINT_PREFIX$VOL
+	echo "mounting $NODE on $MOUNT_POINT..."
+
+	if ! (stat $MOUNT_POINT 2>/dev/null | grep staff &> /dev/null) 
+	then 
+		mkdir -p $MOUNT_POINT
+		sshfs $NODE $MOUNT_POINT 2>&1 | grep -v 'nodelay'
+	fi
+}
