@@ -39,6 +39,8 @@ function mnt {
 	else
 		VOL=${NODE%%.*}
 	fi
+	# remove username if present
+	VOL=${VOL#*@}
 	# is slash in $NODE? (are we mounting a non-default folder?)
 	if [ ${NODE##*/} == $NODE ]
 	then
@@ -51,6 +53,9 @@ function mnt {
 	else
 		# use the folder name as volumn name
 		VOL=${NODE##*/}
+		# also making sure colon is present
+		HOST=${NODE%%/*}
+		NODE=${HOST%:}:/${NODE#*/}
 	fi
 
 	MOUNT_POINT=$MOUNT_POINT_HOME/$MOUNT_POINT_PREFIX$VOL

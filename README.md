@@ -10,18 +10,27 @@ Examples
 --------
 
 	$ mnt
-this would mount the default volume skywalker: on /Volumes/skywalker
+mount the default volume skywalker: on /Volumes/skywalker
 
 	$ mnt host
-this would mount sshfs://host on /Volumes/host
+mount sshfs://host on /Volumes/host
+	
+	$ mnt host:
+same as above
+
+	$ mnt host:/root
+mount sshfs://host/root on /Volumes/root
 
 	$ mnt host/root
-this would mount sshfs://host/root on /Volumes/root
+same as above
 
-	$ mnt host.example.com/home/hippi
-this would mount sshfs://host.example.com/home/hippi on /Volumes/hippi
+	$ mnt host.example.com:/home/hippi
+mount sshfs://host.example.com/home/hippi on /Volumes/hippi
 
 	$ mnt host.example.com
-this would mount sshfs://host.example.com on /Volumes/host
+mount sshfs://host.example.com on /Volumes/host
+
+	$ mnt edc@remote.host.com
+mount sshfs://edc@remote.host.com on /Volumes/remote
 
 
