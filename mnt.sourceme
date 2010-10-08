@@ -41,12 +41,14 @@ function mnt {
 	fi
 	# remove username if present
 	VOL=${VOL#*@}
+	# removing trailing slash
+	NODE=${NODE%/}
 	# is slash in $NODE? (are we mounting a non-default folder?)
-	if [ ${NODE##*/} == $NODE ]
+	if [ "${NODE#*/}" == "$NODE" ]
 	then
 		# no slash. set the folder
 		# making sure NODE ends with colon
-		if [ ${NODE%:} == $NODE ]
+		if [ "${NODE%:}" == "$NODE" ]
 		then
 			NODE=$NODE:
 		fi
